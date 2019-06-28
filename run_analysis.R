@@ -1,6 +1,12 @@
 library(dplyr)
 
-##creating datset of trainings, reading training tables xtrain & ytrain & subjecttrain
+##downloading file & unzipping it
+url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+download.file(url, destfile ='./data/dataset.zip', method='curl')
+unzip(zipfile = "./data/dataset.zip",exdir = "./data")
+pathdata = file.path("./data", "UCI HAR Dataset")
+
+##creating datset of trainings, reading training tables xtrain & ytrain & sub_train
 xtrain=read.table(file.path(pathdata,"train", "X_train.txt"),col.names = features[,2])
 ytrain=read.table(file.path(pathdata,"train", "y_train.txt"),col.names = "code")
 sub_train=read.table(file.path(pathdata,"train","subject_train.txt"),col.names = "subject")
@@ -43,7 +49,7 @@ names(tidydataset)<-gsub("-freq()", "Frequency", names(tidydataset), ignore.case
 names(tidydataset)<-gsub("angle", "Angle", names(tidydataset))
 names(tidydataset)<-gsub("gravity", "Gravity", names(tidydataset))
 
-##Objective5: create tideyset
+##Objective5: create tidySet
 tidySet <- tidydataset %>%
   group_by(subject, activity) %>%
   summarise_all(funs(mean))
